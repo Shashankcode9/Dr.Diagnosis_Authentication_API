@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,5 +28,15 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                         .collect(Collectors.toList())
         );
+    }
+    public void deleteEmail(String email){
+        //Optional<User> user = userRepository.findByEmail(email);
+        userRepository.deleteByEmail(email);
+    }
+    public Optional<User> getByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+    public boolean isExist(String email){
+       return userRepository.existsByEmail(email);
     }
 }

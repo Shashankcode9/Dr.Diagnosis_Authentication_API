@@ -31,7 +31,7 @@ public class AuthController {
     private final EmailService emailService;
     private final TokenService tokenService;
 
-    private final String CLIENT_URL = "http://localhost:8080"; // change to your frontend URL
+    private final String CLIENT_URL = "https://dr-diagnosis-authentication-api.onrender.com"; // change to your frontend URL
 
     // --- Signup with email verification email sending ---
     @PostMapping("/signup")
@@ -54,7 +54,7 @@ public class AuthController {
         VerificationToken verificationToken = tokenService.createToken(user, TokenType.EMAIL_VERIFICATION);
 
         // Send verification email
-        String verifyUrl = CLIENT_URL + "/verify-email?token=" + verificationToken.getToken()+ "OTP is -> "+verificationToken.getOtp();
+        String verifyUrl = CLIENT_URL + "/api/authentication/verify-email?token=" + verificationToken.getToken()+ "\nOTP is -> "+verificationToken.getOtp();
         String subject = "Verify your email";
         String body = "Click the link to verify your email: " + verifyUrl;
 
@@ -88,27 +88,7 @@ public class AuthController {
     }
 
     // --- Verify Email ---
-    @GetMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
-        var optionalToken = tokenService.getByToken(token);
-        if (optionalToken.isEmpty()) {
-            return ResponseEntity.badRequest().body("Invalid token");
-        }
 
-        VerificationToken verificationToken = optionalToken.get();
-
-        if (tokenService.isTokenExpired(verificationToken)) {
-            return ResponseEntity.badRequest().body("Token expired");
-        }
-
-        User user = verificationToken.getUser();
-        user.setEmailVerified(true);
-        userRepository.save(user);
-
-        tokenService.deleteToken(token);
-
-        return ResponseEntity.ok("Email verified successfully");
-    }
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyByOtp(@RequestBody otprequest otprequest) {
         var token = tokenService.getByOtp(otprequest.getOtp()).get().getToken();
