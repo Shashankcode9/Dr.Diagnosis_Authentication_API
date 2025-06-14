@@ -37,7 +37,7 @@ public class VerifyLink {
         VerificationToken verificationToken = optionalToken.get();
 
         if (tokenService.isTokenExpired(verificationToken)) {
-            return "redirect:/web.html";
+            return "redirect:/error.html";
         }
 
         User user = verificationToken.getUser();
