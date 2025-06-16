@@ -58,7 +58,7 @@ public class AuthController {
         VerificationToken verificationToken = tokenService.createToken(user, TokenType.EMAIL_VERIFICATION);
 //
 //        // Send verification email
-        String verifyUrl = domain + "https://dr-diagnosis-authentication-api.onrender.com/api/auth/verify-email?token=" + verificationToken.getToken()+ "\nOTP is -> "+verificationToken.getOtp();
+        String verifyUrl = domain + "/api/authentication/verify-email?token=" + verificationToken.getToken()+ "\nOTP is -> "+verificationToken.getOtp();
         String subject = "Verify your email";
         String body = "Click the link to verify your email: " + verifyUrl;
 
