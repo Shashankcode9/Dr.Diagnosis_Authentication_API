@@ -1,0 +1,23 @@
+# Maven target folder (compiled output)
+target/
+
+# JAR/WAR files
+*.jar
+*.war
+
+# Logs
+*.log
+
+# IntelliJ / Eclipse
+.idea/
+*.iml
+*.classpath
+*.project
+.settings/
+
+# Environment files
+.env
+
+# OS-specific files
+.DS_Store
+Thumbs.db
