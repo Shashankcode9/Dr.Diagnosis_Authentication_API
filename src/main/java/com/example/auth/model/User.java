@@ -26,6 +26,8 @@ public class User {
 
     private boolean emailVerified = false;
     private boolean enabled;
+    private String mobileNo;
+    private String dob;
 
     public boolean isEnabled() {
         return enabled;

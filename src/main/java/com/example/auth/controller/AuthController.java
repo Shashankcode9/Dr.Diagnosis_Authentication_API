@@ -33,7 +33,7 @@ public class AuthController {
     private final TokenService tokenService;
     @Value("${app.domain}") private String domain;
 
-    private final String CLIENT_URL = "https://dr-diagnosis-authentication-api.onrender.com"; // change to your frontend URL
+     // change to your frontend URL
 
     // --- Signup with email verification email sending ---
     @PostMapping("/signup")
@@ -48,16 +48,15 @@ public class AuthController {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(Set.of(Role.USER))
                 .emailVerified(false)
+                .dob(request.getDob())
+                .mobileNo(request.getMobile())
                 .build();
 
         userRepository.save(user);
         System.out.println(">>> New feature endpoint hit <<<");
 
-
-//        // Generate email verification token
         VerificationToken verificationToken = tokenService.createToken(user, TokenType.EMAIL_VERIFICATION);
-//
-//        // Send verification email
+
         String verifyUrl = domain + "/api/authentication/verify-email?token=" + verificationToken.getToken()+ "\nOTP is -> "+verificationToken.getOtp();
         String subject = "Verify your email";
         String body = "Click the link to verify your email: " + verifyUrl;
@@ -65,27 +64,6 @@ public class AuthController {
         emailService.sendEmail(user.getEmail(), subject, body);
 
         return ResponseEntity.ok("User registered successfully. Please verify your email.");
-    }
-    @GetMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
-        var optionalToken = tokenService.getByToken(token);
-        if (optionalToken.isEmpty()) {
-            return ResponseEntity.ok("fail");
-        }
-
-        VerificationToken verificationToken = optionalToken.get();
-
-        if (tokenService.isTokenExpired(verificationToken)) {
-            return ResponseEntity.ok("fail 2");
-        }
-
-        User user = verificationToken.getUser();
-        user.setEmailVerified(true);
-        userRepository.save(user);
-
-        tokenService.deleteToken(token);
-
-        return ResponseEntity.ok("pass");
     }
 
     // --- Login ---
@@ -149,7 +127,7 @@ public class AuthController {
         User user = userOpt.get();
         VerificationToken resetToken = tokenService.createToken(user, TokenType.PASSWORD_RESET);
 
-        String resetUrl = CLIENT_URL + "/reset-password?token=" + resetToken.getToken();
+        String resetUrl = domain + "/reset-password?token=" + resetToken.getToken();
         String subject = "Reset your password";
         String body = "Click the link to reset your password: " + resetUrl;
 

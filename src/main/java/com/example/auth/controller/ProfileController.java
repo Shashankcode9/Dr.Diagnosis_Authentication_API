@@ -29,7 +29,9 @@ public class ProfileController {
                 user.getId(),
                 user.getEmail(),
                 user.getFullName(),
-                user.isEmailVerified()
+                user.isEmailVerified(),
+                user.getMobileNo(),
+                user.getDob()
         );
 
         return ResponseEntity.ok(profile);

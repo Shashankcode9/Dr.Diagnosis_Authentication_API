@@ -10,4 +10,6 @@ public class ProfileResponse {
     private String email;
     private String fullName;
     private boolean emailVerified;
+    private String mobileNo;
+    private String dob;
 }
