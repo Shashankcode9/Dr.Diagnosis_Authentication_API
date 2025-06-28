@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("/api/authentication")
@@ -28,16 +29,16 @@ public class VerifyLink {
     private final TokenService tokenService;
 
     @GetMapping("/verify-email")
-    public String verifyEmail(@RequestParam String token) {
+    public RedirectView verifyEmail(@RequestParam String token) {
         var optionalToken = tokenService.getByToken(token);
         if (optionalToken.isEmpty()) {
-            return "redirect:/error.html";
+            return new RedirectView("/error.html");
         }
 
         VerificationToken verificationToken = optionalToken.get();
 
         if (tokenService.isTokenExpired(verificationToken)) {
-            return "redirect:/error.html";
+            return new RedirectView("/error.html");
         }
 
         User user = verificationToken.getUser();
@@ -46,6 +47,6 @@ public class VerifyLink {
 
         tokenService.deleteToken(token);
 
-        return "redirect:/success.html";
+        return new RedirectView("/success.html");
     }
 }
